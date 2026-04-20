@@ -92,6 +92,7 @@
         <li><a href="#s10">经典反例与致命陷阱</a></li>
         <li><a href="#s11">高阶拓展：Euler 常数、Stirling 公式与 $\zeta$ 函数</a></li>
         <li><a href="#s12">常见与特殊级数公式速查（考前必背）</a></li>
+        <li><a href="#s13">超纲与不常见求和（重证明过程）</a></li>
     </ol>
 </div>
 
@@ -647,6 +648,330 @@
         <li><strong>$\ln 2$ 与 $\pi^2/12$ 别混。</strong> 一次方分母 → $\ln 2$，平方分母 → $\pi^2/12$。</li>
         <li><strong>$\sum P(n)/n!$ 的标准套路：</strong> 把 $P(n)$ 写成下降阶乘 $n(n-1)(n-2)\cdots$ 的组合，每段都化为 $e$ 的下标平移。<strong>不要硬展开！</strong></li>
     </ul>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="s13">第十三部分：超纲与不常见求和（重证明过程）</h2>
+<!-- ═══════════════════════════════════════════ -->
+
+<div class="box box-warn">
+    <div class="box-label">⚠ 阅读说明</div>
+    <p>本节收录的求和绝大多数<strong>不在课程考试范围内</strong>，但出现在数学竞赛、专业课、研究生入学考试或文献中。每个公式都附完整证明或证明思路。<strong>重点不在记结果，而在掌握技巧</strong>：望远镜、Abel 变换、生成函数、Parseval、积分表示、部分分式展开等。</p>
+</div>
+
+<h3>1. Basel 问题：$\zeta(2) = \pi^2/6$ 的两种证明</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">命题</div>
+    $$\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}$$
+</div>
+
+<details>
+    <summary>证明 1 — Euler 原始思路（无穷乘积）</summary>
+    <div class="proof">
+        <div class="proof-title">证明（启发性，需补严格性）：</div>
+        <p>$\sin x$ 的零点为 $0, \pm\pi, \pm 2\pi, \ldots$。Euler 类比多项式分解，写出无穷乘积：</p>
+        $$\frac{\sin x}{x} = \prod_{n=1}^{\infty}\left(1 - \frac{x^2}{n^2 \pi^2}\right)$$
+        <p>另一方面，$\sin x / x$ 的泰勒展开为：</p>
+        $$\frac{\sin x}{x} = 1 - \frac{x^2}{3!} + \frac{x^4}{5!} - \cdots$$
+        <p>展开无穷乘积，<strong>$x^2$ 的系数</strong>为 $-\sum_{n=1}^{\infty} \frac{1}{n^2 \pi^2}$。比较两边 $x^2$ 的系数：</p>
+        $$-\frac{1}{6} = -\frac{1}{\pi^2}\sum_{n=1}^{\infty} \frac{1}{n^2} \implies \sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}$$
+        <p><em>说明：</em> 该乘积分解的严格性需 Hadamard 因式分解定理（复分析超纲），但 Euler 当年凭直觉得到的结果完全正确。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<details>
+    <summary>证明 2 — Fourier 级数（Parseval 等式，标准方法）</summary>
+    <div class="proof">
+        <div class="proof-title">证明：</div>
+        <p>考察函数 $f(x) = x$ 在 $[-\pi, \pi]$ 上的 Fourier 级数。由于 $f$ 是奇函数，仅有正弦项：</p>
+        $$b_n = \frac{1}{\pi}\int_{-\pi}^{\pi} x \sin(nx)\,dx = \frac{2}{\pi}\int_0^\pi x\sin(nx)\,dx = \frac{2(-1)^{n+1}}{n}$$
+        <p>故 $f(x) = x \sim \sum_{n=1}^{\infty} \frac{2(-1)^{n+1}}{n} \sin(nx)$。</p>
+        <p><strong>应用 Parseval 等式：</strong> $\dfrac{1}{\pi}\int_{-\pi}^{\pi} f^2 = \sum b_n^2$。</p>
+        <p>左边：$\dfrac{1}{\pi} \int_{-\pi}^{\pi} x^2 dx = \dfrac{2\pi^2}{3}$。</p>
+        <p>右边：$\sum_{n=1}^{\infty} \dfrac{4}{n^2}$。</p>
+        <p>等式给出 $\dfrac{2\pi^2}{3} = 4 \sum \dfrac{1}{n^2}$，即 $\sum \dfrac{1}{n^2} = \dfrac{\pi^2}{6}$。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<div class="box box-tech">
+    <div class="box-label">推论 — $\zeta(4) = \pi^4/90$</div>
+    <p>对 $f(x) = x^2$ 在 $[-\pi, \pi]$ 上做同样 Parseval：算出 $\dfrac{1}{\pi}\int x^4 dx = \dfrac{2\pi^4}{5}$，傅里叶系数对应给出 $\zeta(4) = \pi^4/90$。一般地，$\zeta(2k)$ 都可由 $f(x) = x^k$ 类型的 Parseval + Bernoulli 数算出。</p>
+</div>
+
+<h3>2. 部分分式展开 $\cot$：$\sum 1/(n^2+a^2)$ 闭式</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">命题（Euler 余切展开）</div>
+    $$\pi \cot(\pi z) = \frac{1}{z} + \sum_{n=1}^{\infty} \frac{2z}{z^2 - n^2} \qquad (z \notin \mathbb{Z})$$
+    <p>由此可得：$\displaystyle \sum_{n=1}^{\infty} \frac{1}{n^2 + a^2} = \frac{\pi \coth(\pi a)}{2a} - \frac{1}{2a^2}$（$a > 0$）。</p>
+</div>
+
+<details>
+    <summary>证明思路（基于 cot 部分分式 + 替换 $z \to ia$）</summary>
+    <div class="proof">
+        <div class="proof-title">证明：</div>
+        <p><strong>第一步：</strong> 在 cot 展开式中令 $z = ia$（$a > 0$）：</p>
+        $$\pi \cot(\pi i a) = \frac{1}{ia} + \sum_{n=1}^{\infty} \frac{2ia}{-a^2 - n^2}$$
+        <p>由 $\cot(ix) = -i\coth x$，左边 $= -i\pi\coth(\pi a)$。整理：</p>
+        $$-i\pi \coth(\pi a) = -\frac{i}{a} - 2ia\sum_{n=1}^{\infty} \frac{1}{n^2 + a^2}$$
+        <p>除以 $-i$：</p>
+        $$\pi \coth(\pi a) = \frac{1}{a} + 2a\sum_{n=1}^{\infty} \frac{1}{n^2+a^2}$$
+        <p>解出：$\displaystyle \sum_{n=1}^{\infty} \frac{1}{n^2 + a^2} = \frac{\pi\coth(\pi a)}{2a} - \frac{1}{2a^2}$。</p>
+        <p><strong>验证极限 $a \to 0$：</strong> 用 $\coth x \sim 1/x + x/3 - x^3/45 + \cdots$，$\pi\coth(\pi a)/(2a) \sim 1/(2a^2) + \pi^2/6 - \cdots$，所以 $a \to 0$ 时右边 $\to \pi^2/6 = \zeta(2)$，与 Basel 问题<strong>完美自洽</strong>。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<div class="box box-tech">
+    <div class="box-label">应用 — 双曲版本</div>
+    <p>取 $a = 1$：$\displaystyle \sum_{n=1}^{\infty} \frac{1}{n^2 + 1} = \frac{\pi \coth \pi - 1}{2} \approx 1.0767$。</p>
+    <p>同理可得 $\displaystyle \sum_{n=-\infty}^{\infty} \frac{1}{n^2 + a^2} = \frac{\pi}{a}\coth(\pi a)$（双边求和的「Poisson 求和公式」原型）。</p>
+</div>
+
+<h3>3. Catalan 常数 $G$ 与相关交错求和</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">定义</div>
+    $$G = \sum_{n=0}^{\infty} \frac{(-1)^n}{(2n+1)^2} = 1 - \frac{1}{9} + \frac{1}{25} - \frac{1}{49} + \cdots \approx 0.9159$$
+    <p>这是个看似简单却<strong>至今没有闭合表达式</strong>的常数（甚至无理性都未证明！），在数论与组合学中频繁出现。</p>
+</div>
+
+<details>
+    <summary>积分表示与缓慢收敛性证明</summary>
+    <div class="proof">
+        <div class="proof-title">证明：$G = \int_0^1 \frac{\arctan x}{x}\,dx$</div>
+        <p>由 $\arctan x = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{2n+1}$（$|x|\le 1$），逐项除以 $x$ 再积分：</p>
+        $$\int_0^1 \frac{\arctan x}{x} dx = \sum_{n=0}^{\infty} \frac{(-1)^n}{2n+1} \int_0^1 x^{2n} dx = \sum_{n=0}^{\infty} \frac{(-1)^n}{(2n+1)^2} = G$$
+        <p>逐项积分的合法性来自一致收敛（Leibniz 余项 $\le 1/(2N+3)$ 一致控制）。</p>
+        <p><strong>另一形式：</strong> $G = -\int_0^{\pi/4} \ln(\tan\theta)\,d\theta$（用 $u = \tan\theta$ 换元后由对数级数得到）。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<h3>4. 中心二项系数倒数：$\sum 1/\binom{2n}{n}$ 与 $\pi^2/18$</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">两个不平凡的求和</div>
+    $$\sum_{n=0}^{\infty} \frac{1}{\binom{2n}{n}} = \frac{4}{3} + \frac{2\pi\sqrt{3}}{27}, \qquad \sum_{n=1}^{\infty} \frac{1}{n^2 \binom{2n}{n}} = \frac{\pi^2}{18}$$
+</div>
+
+<details>
+    <summary>证明 $\sum_{n=1}^{\infty} \frac{1}{n^2 \binom{2n}{n}} = \frac{\pi^2}{18}$（$\arcsin^2$ 展开法）</summary>
+    <div class="proof">
+        <div class="proof-title">证明：</div>
+        <p>核心是下面这个经典展开（其推导见下文「补：$\arcsin^2$ 的级数推导」框）：</p>
+        $$\bigl(\arcsin y\bigr)^2 = \sum_{n=1}^{\infty} \frac{(2y)^{2n}}{2n^2\binom{2n}{n}} \qquad (|y|\le 1)$$
+        <p>令 $y = 1/2$：$\arcsin(1/2) = \pi/6$，左边 $= (\pi/6)^2 = \pi^2/36$；右边 $= \dfrac{1}{2}\displaystyle\sum_{n=1}^{\infty} \dfrac{1}{n^2\binom{2n}{n}}$（因为 $(2 \cdot 1/2)^{2n} = 1$）。</p>
+        <p>所以 $\dfrac{\pi^2}{36} = \dfrac{1}{2}\sum \dfrac{1}{n^2\binom{2n}{n}}$，即</p>
+        $$\sum_{n=1}^{\infty} \frac{1}{n^2 \binom{2n}{n}} = \frac{\pi^2}{18}$$
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<div class="box box-tech">
+    <div class="box-label">补：$\arcsin^2$ 的级数推导</div>
+    <p>设 $g(y) = (\arcsin y)^2$。求导得 $g'(y) = 2\arcsin y / \sqrt{1-y^2}$，再求导整理得 ODE：</p>
+    $$(1-y^2)g''(y) - y\,g'(y) = 2$$
+    <p>设 $g(y) = \sum_{n \ge 1} a_{2n} y^{2n}$（$g$ 偶函数且 $g(0)=0$），代入比较 $y^{2n}$ 的系数：</p>
+    $$2(n+1)(2n+1)\,a_{2n+2} - (2n)^2\,a_{2n} = 0 \quad (n \ge 1), \qquad 2 a_2 = 2$$
+    <p>初值 $a_2 = 1$，递推 $a_{2n+2} = \dfrac{2n^2}{(n+1)(2n+1)}\,a_{2n}$。归纳可证</p>
+    $$a_{2n} = \frac{4^n}{2n^2 \binom{2n}{n}}$$
+    <p>（验证 $n=1$：$4/(2 \cdot 2) = 1 = a_2$ ✓；$n=2$：$16/(2\cdot 4\cdot 6) = 1/3 = a_4$ ✓。）</p>
+    <p>因此</p>
+    $$(\arcsin y)^2 = \sum_{n=1}^{\infty} \frac{(2y)^{2n}}{2n^2 \binom{2n}{n}}$$
+    <p>取 $y = 1/2$：$(\pi/6)^2 = \dfrac{1}{2}\sum \dfrac{1}{n^2\binom{2n}{n}}$，即 $\sum \dfrac{1}{n^2 \binom{2n}{n}} = \dfrac{\pi^2}{18}$。</p>
+</div>
+
+<h3>5. Apéry 常数：$\zeta(3)$ 的快速级数</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">命题（Apéry 1978，证明 $\zeta(3)$ 无理性的核心）</div>
+    $$\zeta(3) = \sum_{n=1}^{\infty} \frac{1}{n^3} = \frac{5}{2}\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^3 \binom{2n}{n}}$$
+    <p>右边收敛速度极快（每项约缩小 4 倍），是数值计算 $\zeta(3)$ 的标准方法。Apéry 用类似的加速级数证明了 $\zeta(3) \notin \mathbb{Q}$，但 $\zeta(5), \zeta(7), \ldots$ 至今未知是否无理！</p>
+</div>
+
+<details>
+    <summary>证明思路</summary>
+    <div class="proof">
+        <div class="proof-title">证明思路：</div>
+        <p>记 $S = \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^3\binom{2n}{n}}$。考虑积分</p>
+        $$I = -\int_0^1 \int_0^1 \int_0^1 \frac{1}{1 - xyz}\ln(xyz)\,dx\,dy\,dz$$
+        <p>展开 $1/(1-xyz) = \sum (xyz)^k$ 并逐项积分得 $I = 2\zeta(3)$。另一种类似的二重积分恰好等于 $5S/2$，于是 $\zeta(3) = (5/2) S$。</p>
+        <p>详细推导见 Apéry 1979 年原始论文 <em>"Irrationalité de $\zeta(2)$ et $\zeta(3)$"</em>（Astérisque 61, pp. 11–13）或 A. van der Poorten 的著名解说《A proof that Euler missed... Apéry's proof of the irrationality of $\zeta(3)$》（Math. Intelligencer 1, no. 4, 1979, pp. 195–203）。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<div class="box box-tech">
+    <div class="box-label">关联 — Euler $\sum H_n/n^2 = 2\zeta(3)$</div>
+    <p>$H_n = 1 + 1/2 + \cdots + 1/n$ 是调和数。Euler 发现：</p>
+    $$\sum_{n=1}^{\infty} \frac{H_n}{n^2} = 2\zeta(3)$$
+    <p><strong>证明（Abel 求和 + 二重和交换）：</strong></p>
+    $$\sum_{n=1}^\infty \frac{H_n}{n^2} = \sum_{n=1}^\infty \frac{1}{n^2}\sum_{k=1}^n \frac{1}{k} = \sum_{k=1}^\infty \frac{1}{k}\sum_{n=k}^\infty \frac{1}{n^2}$$
+    <p>利用 $\sum_{n=k}^\infty 1/n^2 = \zeta(2) - \sum_{n=1}^{k-1} 1/n^2$ 并配合 Abel 变换可凑出 $2\zeta(3)$。详细变形见 Euler 原始证明。</p>
+</div>
+
+<h3>6. 交错 $\zeta(3)$ 与 $\zeta(s)$ 反演</h3>
+
+<div class="box box-thm">
+    <div class="box-label">公式 — Dirichlet $\eta(3)$</div>
+    $$\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^3} = \frac{3}{4}\zeta(3)$$
+</div>
+
+<details>
+    <summary>证明（标准的奇偶分离）</summary>
+    <div class="proof">
+        <div class="proof-title">证明：</div>
+        <p>记 $S^+ = \sum_{n \text{ odd}} 1/n^3$，$S^- = \sum_{n \text{ even}} 1/n^3 = \sum 1/(2k)^3 = \zeta(3)/8$。</p>
+        <p>则 $\zeta(3) = S^+ + S^-$，所以 $S^+ = \zeta(3) - \zeta(3)/8 = 7\zeta(3)/8$。</p>
+        <p>$\eta(3) = S^+ - S^- = 7\zeta(3)/8 - \zeta(3)/8 = 6\zeta(3)/8 = 3\zeta(3)/4$。</p>
+        <p><strong>一般公式：</strong> $\eta(s) = (1 - 2^{1-s})\zeta(s)$。代入 $s=3$：$\eta(3) = (1 - 1/4)\zeta(3) = 3\zeta(3)/4$，一致。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<h3>7. 望远镜的高级变体：$\sum \arctan$</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">不常见的望远镜</div>
+    $$\sum_{n=1}^{\infty} \arctan\frac{1}{n^2 + n + 1} = \frac{\pi}{4}$$
+</div>
+
+<details>
+    <summary>证明（差角公式构造望远镜）</summary>
+    <div class="proof">
+        <div class="proof-title">证明：</div>
+        <p><strong>关键观察：</strong> 注意到</p>
+        $$\arctan(n+1) - \arctan n = \arctan\frac{(n+1) - n}{1 + n(n+1)} = \arctan\frac{1}{n^2+n+1}$$
+        <p>（差角公式 $\arctan a - \arctan b = \arctan\dfrac{a-b}{1+ab}$，当 $ab > -1$。）</p>
+        <p>所以原级数 $= \sum_{n=1}^{N}[\arctan(n+1) - \arctan n] = \arctan(N+1) - \arctan 1 \to \dfrac{\pi}{2} - \dfrac{\pi}{4} = \dfrac{\pi}{4}$。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<div class="box box-tech">
+    <div class="box-label">同类技巧 — Machin 公式之根源</div>
+    <p>$\arctan 1 = \arctan(1/2) + \arctan(1/3)$（差角公式验证 $\frac{1/2+1/3}{1-1/6} = 1$）。Machin 类公式 $\pi/4 = 4\arctan(1/5) - \arctan(1/239)$ 给出快速计算 $\pi$ 的方法。</p>
+</div>
+
+<h3>8. Fibonacci 倒数级数</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">命题</div>
+    $$\sum_{n=1}^{\infty} \frac{F_n}{2^n} = 2, \qquad \sum_{n=0}^{\infty} \frac{1}{F_{2^n}} = \frac{7 - \sqrt{5}}{2}$$
+    <p>（$F_n$ 为 Fibonacci 数：$F_1 = F_2 = 1$，$F_{n+2} = F_{n+1} + F_n$。）</p>
+    <p>而 $\sum 1/F_n$（Fibonacci 倒数和，$\approx 3.3599$）<strong>已被证明无理</strong>（André-Jeannin 1989），但是否是超越数仍未解决。</p>
+</div>
+
+<details>
+    <summary>证明 $\sum F_n/2^n = 2$（生成函数法）</summary>
+    <div class="proof">
+        <div class="proof-title">证明：</div>
+        <p>Fibonacci 生成函数：$\displaystyle G(x) = \sum_{n=1}^{\infty} F_n x^n = \frac{x}{1 - x - x^2}$（$|x| < 1/\varphi$，$\varphi$ 为黄金比）。</p>
+        <p><strong>推导：</strong> 设 $G(x) = \sum F_n x^n$。由 $F_{n+2} = F_{n+1} + F_n$：</p>
+        $$G(x) - F_1 x - F_2 x^2 = \sum_{n \ge 3} F_n x^n = \sum_{n \ge 3}(F_{n-1} + F_{n-2})x^n = x(G(x) - F_1 x) + x^2 G(x)$$
+        <p>解出 $G(x)(1 - x - x^2) = x$，即 $G(x) = x/(1 - x - x^2)$。</p>
+        <p>代入 $x = 1/2$：$G(1/2) = \dfrac{1/2}{1 - 1/2 - 1/4} = \dfrac{1/2}{1/4} = 2$。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<details>
+    <summary>证明 $\sum_{n=0}^{\infty} 1/F_{2^n} = (7-\sqrt 5)/2$（Knuth 的望远镜）</summary>
+    <div class="proof">
+        <div class="proof-title">证明思路：</div>
+        <p>利用 Fibonacci 恒等式 $F_{2n} = F_n L_n$（其中 $L_n$ 为 Lucas 数）和 $L_{2^n} - 2 = L_{2^{n-1}}^2 - 4$ 等，可构造望远镜：</p>
+        $$\frac{1}{F_{2^n}} = \frac{L_{2^n} - L_{2^{n+1}}/L_{2^n}}{F_{2^{n+1}}} \cdot (\ldots)$$
+        <p>详细变形较繁琐，最终结果由 Binet 公式 $F_n = (\varphi^n - \psi^n)/\sqrt 5$ 与几何级数化简得到，其中 $\varphi = (1+\sqrt 5)/2$，$\psi = (1-\sqrt 5)/2$。</p>
+        <p>这类「子序列」级数往往能闭合（因为 $2^n$ 的指数结构产生几何缩减），而完整的 $\sum 1/F_n$ 反而没有闭式。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<h3>9. Abel 求和法的非平凡应用</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">命题 — 通过 Abel 极限求 $\sum (-1)^{n-1}/n$</div>
+    <p>这本是 $\ln 2$，但 Abel 求和是<strong>从形式幂级数到实际数值</strong>的桥梁。考虑</p>
+    $$f(x) = \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n} x^n = \ln(1+x), \quad |x| < 1$$
+    <p>该幂级数在 $x = 1$ 仍收敛（Leibniz），由 <strong>Abel 第二定理</strong>（$\sum a_n$ 收敛 $\implies \lim_{x \to 1^-} \sum a_n x^n = \sum a_n$）：</p>
+    $$\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n} = \lim_{x \to 1^-} \ln(1+x) = \ln 2$$
+</div>
+
+<details>
+    <summary>Abel 第二定理（连续性定理）的证明</summary>
+    <div class="proof">
+        <div class="proof-title">证明：</div>
+        <p>设 $S_n = \sum_{k=0}^n a_k$，$S_n \to S$。要证 $\lim_{x \to 1^-}\sum a_n x^n = S$。</p>
+        <p>WLOG 设 $S = 0$（否则减去 $S$）。由 Abel 变换：</p>
+        $$\sum_{n=0}^{N} a_n x^n = (1-x)\sum_{n=0}^{N-1} S_n x^n + S_N x^N$$
+        <p>$N \to \infty$（$|x| < 1$）：$\sum a_n x^n = (1-x)\sum_{n \ge 0} S_n x^n$。</p>
+        <p>给定 $\varepsilon > 0$，取 $N_0$ 使 $|S_n| < \varepsilon$（$n \ge N_0$）。则</p>
+        $$\left|(1-x)\sum_{n \ge N_0} S_n x^n\right| \le (1-x)\varepsilon \sum_{n \ge N_0} x^n \le \varepsilon$$
+        <p>剩下有限和 $(1-x)\sum_{n < N_0} S_n x^n \to 0$（$x \to 1^-$）。故极限为 $0 = S$。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<div class="box box-tech">
+    <div class="box-label">⚠ Abel 求和与 Cesàro 求和的扩张</div>
+    <p>对发散级数如 $\sum (-1)^n = 1 - 1 + 1 - \cdots$，Abel 极限给出</p>
+    $$\lim_{x \to 1^-}\sum (-1)^n x^n = \lim_{x \to 1^-} \frac{1}{1+x} = \frac{1}{2}$$
+    <p>这就是 Grandi 级数的「Abel 和」 $1/2$。Cesàro 求和（部分和的算术平均极限）也给出 $1/2$。这些<strong>广义求和</strong>在物理（重整化）和数论（Riemann $\zeta$ 解析延拓）中至关重要，但它们<strong>不是经典意义下的收敛</strong>，使用时务必声明。</p>
+</div>
+
+<h3>10. 一些技巧性极强的数论级数</h3>
+
+<div class="box box-beyond">
+    <div class="box-label">命题 — Lambert 级数与 $\sigma_0(n)$</div>
+    $$\sum_{n=1}^{\infty} \frac{x^n}{1 - x^n} = \sum_{n=1}^{\infty} d(n) x^n \qquad (|x| < 1)$$
+    <p>其中 $d(n) = \sigma_0(n)$ 是 $n$ 的因子个数。这是一个把<strong>解析函数</strong>与<strong>数论函数</strong>联系起来的桥梁。</p>
+</div>
+
+<details>
+    <summary>证明（双重求和交换）</summary>
+    <div class="proof">
+        <div class="proof-title">证明：</div>
+        <p>$\dfrac{x^n}{1-x^n} = \sum_{k=1}^{\infty} x^{nk}$（几何级数）。代入：</p>
+        $$\sum_{n=1}^{\infty}\sum_{k=1}^{\infty} x^{nk}$$
+        <p>令 $m = nk$，固定 $m$ 求和：每个 $m$ 出现的次数等于 $m$ 的正因子对 $(n,k)$ 的个数 $= d(m)$：</p>
+        $$\sum_{m=1}^{\infty} d(m) x^m$$
+        <p>双重和的绝对收敛性来自 $|x| < 1$ 时 $\sum d(m)|x|^m < \infty$（因 $d(m) = O(m^\varepsilon)$）。</p>
+        <p class="qed">$\blacksquare$</p>
+    </div>
+</details>
+
+<div class="box box-tech">
+    <div class="box-label">速查总表 — 超纲求和</div>
+    <table>
+        <tr><th>级数</th><th>和</th><th>关键技巧</th></tr>
+        <tr><td>$\sum 1/n^2$</td><td>$\pi^2/6$</td><td>Fourier/Parseval 或 $\sin x/x$ 乘积</td></tr>
+        <tr><td>$\sum 1/n^4$</td><td>$\pi^4/90$</td><td>Parseval 用 $f(x) = x^2$</td></tr>
+        <tr><td>$\sum 1/(n^2+a^2)$</td><td>$\dfrac{\pi\coth(\pi a)}{2a} - \dfrac{1}{2a^2}$</td><td>$\cot$ 部分分式 $z = ia$</td></tr>
+        <tr><td>$\sum (-1)^n/(2n+1)^2$</td><td>$G$（Catalan，无闭式）</td><td>$\int_0^1 \arctan x/x\,dx$</td></tr>
+        <tr><td>$\sum 1/(n^2 \binom{2n}{n})$</td><td>$\pi^2/18$</td><td>$(\arcsin y)^2$ 的 ODE 展开</td></tr>
+        <tr><td>$\sum 1/(n^3\binom{2n}{n})$（有交错符号变体）</td><td>$2\zeta(3)/5$</td><td>Apéry 加速</td></tr>
+        <tr><td>$\sum H_n/n^2$</td><td>$2\zeta(3)$</td><td>Abel 二重和</td></tr>
+        <tr><td>$\sum (-1)^{n-1}/n^3$</td><td>$3\zeta(3)/4$</td><td>奇偶分离</td></tr>
+        <tr><td>$\sum \arctan\frac{1}{n^2+n+1}$</td><td>$\pi/4$</td><td>差角望远镜</td></tr>
+        <tr><td>$\sum F_n/2^n$</td><td>$2$</td><td>生成函数 $x/(1-x-x^2)$</td></tr>
+        <tr><td>$\sum d(n) x^n$</td><td>$\sum x^n/(1-x^n)$</td><td>Lambert 级数</td></tr>
+    </table>
+</div>
+
+<div class="box box-warn">
+    <div class="box-label">📚 学习建议</div>
+    <p>本节的<strong>具体公式不必死记</strong>，但要熟练掌握其背后的<strong>三大类技巧</strong>：</p>
+    <ol>
+        <li><strong>幂级数 + 端点求值</strong>（Abel 第二定理）：把和写成某 $f(x)$ 在 $x=1$ 的取值。</li>
+        <li><strong>Parseval 恒等式</strong>：把 $\sum 1/n^{2k}$ 类问题化为 $\int f^2$。</li>
+        <li><strong>双重求和交换 + 部分分式</strong>：处理 Lambert 级数、调和和、$1/(n^2+a^2)$ 类问题。</li>
+    </ol>
+    <p>掌握这三套，你就能在考场或竞赛遇到陌生求和时<strong>临场推出</strong>，而不必依赖记忆。</p>
 </div>
 
 
